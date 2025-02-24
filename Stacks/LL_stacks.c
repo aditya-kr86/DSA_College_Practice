@@ -15,10 +15,9 @@ struct stack
 struct stack* createStack()
 {
 	struct stack *s = (struct stack*) malloc(sizeof(struct stack));
-	s->head = (struct Node*)malloc(sizeof(struct Node));
-	s->head->data = NULL;
-	s->head->next = NULL;
-	s->top = s->head;
+	struct Node *newNode = NULL;
+	s->top = newNode;
+	return s;
 }
 
 int isEmpty(struct stack *s)
@@ -35,14 +34,14 @@ struct stack* push(struct stack *s, int toInsert)
 {
 	if(s!=NULL)
 	{
-		newNode = (struct Node*)malloc(sizeof(struct Node));
+		struct Node *newNode = (struct Node*)malloc(sizeof(struct Node));
 		newNode->data = toInsert;
 		newNode->next = s->top;
 		s->top = newNode;
 	}
 	else
 	{
-		newNode = (struct Node*)malloc(sizeof(struct Node));
+		struct Node *newNode = (struct Node*)malloc(sizeof(struct Node));
 		newNode->data = toInsert;
 		newNode->next = NULL;
 		s->top = newNode;
@@ -50,7 +49,7 @@ struct stack* push(struct stack *s, int toInsert)
 	
 	return s;
 }
-
+/*
 int pop(struct stack *s)
 {
 	if(!isEmpty(s))
@@ -62,7 +61,6 @@ int pop(struct stack *s)
 	}
 }
 
-/*
 void deleteStack(struct stack *s)
 {
 	free(s->array);
@@ -82,10 +80,18 @@ int main()
 		printf("Stack is Not Empty\n");
 	}
 	push(s, 11);
+	if(isEmpty(s))
+	{
+		printf("Stack is Empty\n");
+	}
+	else
+	{
+		printf("Stack is Not Empty\n");
+	}
 	push(s, 21);
 	push(s, 31);
 	push(s, 41);
 	push(s, 51);
-	
+	printf("The Element At The Top of Stack is %d\n", peek(s));
 	return 0;
 }
