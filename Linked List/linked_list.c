@@ -1,229 +1,256 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-struct Node{
-	int data;
-	struct Node* next;
+struct Node {
+    int data;
+    struct Node* next;
 };
 
 // Linked List Traversal
-void traverse(struct Node* head)
-{	
-	if(head != NULL)
-	{
-		int i = 0;
-		printf("\nPrinting Linked List\n");
-		while (head != NULL)
-		{
-			printf("The Element at %d index: %d\n",i, head->data);
-			head = head->next;
-			i++;
-		}
-	}
-	printf("\n");
+void traverse(struct Node* head) {    
+    if (head == NULL) {
+        printf("\nThe List is Empty!\n");
+        return;
+    }
+    
+    printf("\nPrinting Linked List\n");
+    int i = 0;
+    while (head != NULL) {
+        printf("Element at index %d: %d\n", i, head->data);
+        head = head->next;
+        i++;
+    }
+    printf("\n");
 }
 
-// Insert At Begining
-struct Node* insertAtBegining(struct Node* head)
-{
-	int toInsert;
-	printf("Enter The Element That You Want To Insert In The Begining Of LinkedList: ");
-	scanf("%d", &toInsert);
-	
-	struct Node* firstNode = (struct Node*)malloc(sizeof(struct Node));
-	firstNode->data = toInsert;
-	firstNode->next = head;
-	return firstNode;
-	
+// Insert At Beginning
+struct Node* insertAtBeginning(struct Node* head) {
+    int toInsert;
+    printf("Enter the element to insert at the beginning: ");
+    if (scanf("%d", &toInsert) != 1) {
+        printf("Invalid input!\n");
+        return head;
+    }
+
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = toInsert;
+    newNode->next = head;
+    return newNode;
 }
 
 // Insert At End
-struct Node* insertAtEnd(struct Node* head)
-{
-	int toInsert;
-	printf("Enter The Element That You Want To Insert In The Last Of LinkedList: ");
-	scanf("%d", &toInsert);
-	
-	struct Node* temp = head;
-	while(temp->next != NULL)
-	{
-		temp = temp->next;
-	}
-	struct Node* lastNode = (struct Node*)malloc(sizeof(struct Node));
-	lastNode->data = toInsert;
-	lastNode->next = NULL;
-	temp->next = lastNode;
-	printf("The Element %d is Successfully Inserted At Last of Linked-List\n", toInsert);
-	printf("\n");
-	return head;
-	
+struct Node* insertAtEnd(struct Node* head) {
+    int toInsert;
+    printf("Enter the element to insert at the end: ");
+    if (scanf("%d", &toInsert) != 1) {
+        printf("Invalid input!\n");
+        return head;
+    }
+
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = toInsert;
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        return newNode;
+    }
+
+    struct Node* temp = head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+    return head;
 }
 
 // Insert At Given Index
-struct Node* insertAtIndex(struct Node* head)
-{
-	if(head != NULL)
-	{
-		int atIndex;
-		printf("Enter the Index at Which You want to Add new Node: ");
-		scanf("%d", &atIndex);
-		
-		struct Node* temp1 = head;
-		struct Node* temp2 = head->next;
-		for(int i=1; i<atIndex; i++)
-		{
-			temp1 = temp1->next;
-			if(temp1 == NULL)
-			{
-				printf("\nInavlid Index!!!!!!!!!!!!!!!!!!!");
-				return head;
-			}
-			temp2 = temp2->next;
-		}
-		int toInsert;
-		printf("\nEnter The Element That You Want To Insert In The Last Of LinkedList: ");
-		scanf("%d", &toInsert);
-		
-		struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-		temp1->next = newNode;
-		newNode->data = toInsert;
-		newNode->next = temp2;
-	}
-	return head;
+struct Node* insertAtIndex(struct Node* head) {
+    int atIndex, toInsert;
+    printf("Enter the index to insert at: ");
+    if (scanf("%d", &atIndex) != 1 || atIndex < 0) {
+        printf("Invalid index!\n");
+        return head;
+    }
+
+    printf("Enter the element to insert: ");
+    if (scanf("%d", &toInsert) != 1) {
+        printf("Invalid input!\n");
+        return head;
+    }
+
+    if (atIndex == 0) {
+        return insertAtBeginning(head);
+    }
+
+    struct Node* temp = head;
+    for (int i = 1; i < atIndex && temp != NULL; i++) {
+        temp = temp->next;
+    }
+
+    if (temp == NULL) {
+        printf("Invalid index!\n");
+        return head;
+    }
+
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = toInsert;
+    newNode->next = temp->next;
+    temp->next = newNode;
+
+    return head;
 }
 
-// Delete the First Node
-struct Node* deleteFirst(struct Node* head)
-{
-	if(head!= NULL)
-	{
-		struct Node* temp = head;
-		head = head->next;
-		free(temp);
-		return head;
-	}
+// Delete First Node
+struct Node* deleteFirst(struct Node* head) {
+    if (head == NULL) {
+        printf("List is already empty!\n");
+        return NULL;
+    }
+
+    struct Node* temp = head;
+    head = head->next;
+    free(temp);
+    return head;
 }
 
-// Delete the last Node
-struct Node* deleteLast(struct Node* head)
-{
-	if(head!= NULL)
-	{
-		struct Node* temp1 = head;
-		struct Node* temp2 = head->next;
-		while(temp2->next != NULL)
-		{
-			temp1 = temp1->next;
-			temp2 = temp2->next;
-		}
-		temp1->next = NULL;
-		free(temp2);
-		return head;
-	}
+// Delete Last Node
+struct Node* deleteLast(struct Node* head) {
+    if (head == NULL) {
+        printf("List is already empty!\n");
+        return NULL;
+    }
+
+    if (head->next == NULL) {
+        free(head);
+        return NULL;
+    }
+
+    struct Node* temp1 = head;
+    struct Node* temp2 = head->next;
+    while (temp2->next != NULL) {
+        temp1 = temp1->next;
+        temp2 = temp2->next;
+    }
+    temp1->next = NULL;
+    free(temp2);
+    return head;
 }
 
-// Delete At Given Index
-struct Node* deleteAtIndex(struct Node* head)
-{
-	if(head != NULL)
-	{
-		int atIndex;
-		printf("Enter the Index of Which You want to Delete Node: ");
-		scanf("%d", &atIndex);
-		struct Node* temp1 = head;
-		struct Node* temp2 = head->next;
-		for(int i=1; i<atIndex; i++)
-		{
-			temp1 = temp1->next;
-			if(temp1 == NULL)
-			{
-				printf("\nInavlid Index!!!!!!!!!!!!!!!!!!!");
-				return head;
-			}
-			temp2 = temp2->next;
-		}
-		temp1->next = temp2->next;
-		free(temp2);
-	}
-	return head;
+// Delete Node At Given Index
+struct Node* deleteAtIndex(struct Node* head) {
+    int atIndex;
+    printf("Enter the index to delete: ");
+    if (scanf("%d", &atIndex) != 1 || atIndex < 0) {
+        printf("Invalid index!\n");
+        return head;
+    }
+
+    if (head == NULL) {
+        printf("List is already empty!\n");
+        return NULL;
+    }
+
+    if (atIndex == 0) {
+        return deleteFirst(head);
+    }
+
+    struct Node* temp1 = head;
+    struct Node* temp2 = head->next;
+    for (int i = 1; i < atIndex && temp2 != NULL; i++) {
+        temp1 = temp1->next;
+        temp2 = temp2->next;
+    }
+
+    if (temp2 == NULL) {
+        printf("Invalid index!\n");
+        return head;
+    }
+
+    temp1->next = temp2->next;
+    free(temp2);
+    return head;
 }
 
+// Free memory before exiting
+void freeList(struct Node* head) {
+    struct Node* temp;
+    while (head != NULL) {
+        temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
 
-int main()
-{
-	int isRun = 1;
-	int value;
-	struct Node* head = (struct Node*)malloc(sizeof(struct Node));
-	printf("Enter the First Element of Linked List\n");
-	scanf("%d", &value);
-	head->data = value;
-	head->next = NULL;
-	while(isRun)
-	{
-		int option_selected;
-		printf("Select The Operation You Want To Perform\n 1.Traversal of Linked List\n 2. Interstion at Begin\n 3. Interstion at End\n 4. Interstion at Index\n 5. Deletion at Begining\n 6. Deletion at End\n 7. Deletion at Index\n OR Enter 8 To Exit The Program\n");
-		scanf("%d",&option_selected);
-		printf("\n");
-		switch(option_selected)
-		{
-			case 1:
-			{
-				traverse(head);
-				break;
-			}
-			case 2:
-			{
-				head = insertAtBegining(head);
-				printf("Linked List After Insertion\n");
-				traverse(head);
-				break;
-			}
-			case 3:
-			{
-				head = insertAtEnd(head);
-				printf("Linked List After Insertion\n");
-				traverse(head);
-				break;
-			}
-			case 4:
-			{
-				head = insertAtIndex(head);
-				printf("Linked List After Insertion\n");
-				traverse(head);
-				break;
-			}
-			case 5:
-			{
-				head = deleteFirst(head);
-				printf("Linked List After Deletion\n");
-				traverse(head);
-				break;
-			}
-			case 6:
-			{
-				head = deleteLast(head);
-				printf("Linked List After Deletion\n");
-				traverse(head);
-				break;
-			}
-			case 7:
-			{
-				head = deleteAtIndex(head);
-				printf("Linked List After Deletion\n");
-				traverse(head);
-				break;
-			}
-			case 8:
-			{
-				isRun = 0;
-				break;
-			}
-			default:
-			{
-				printf("Invalid Choice");
-			}
-		};
-	}
-	
-	return 0;
+int main() {
+    int isRun = 1, value;
+    struct Node* head = NULL;
+
+    printf("Enter the first element of the linked list: ");
+    if (scanf("%d", &value) != 1) {
+        printf("Invalid input!\n");
+        return 1;
+    }
+
+    head = (struct Node*)malloc(sizeof(struct Node));
+    head->data = value;
+    head->next = NULL;
+
+    while (isRun) {
+        int option_selected;
+        printf("\nSelect an operation:\n");
+        printf("1. Traverse Linked List\n");
+        printf("2. Insert at Beginning\n");
+        printf("3. Insert at End\n");
+        printf("4. Insert at Index\n");
+        printf("5. Delete First Node\n");
+        printf("6. Delete Last Node\n");
+        printf("7. Delete at Index\n");
+        printf("8. Exit\n");
+        printf("Enter your choice: ");
+        
+        if (scanf("%d", &option_selected) != 1) {
+            printf("Invalid input!\n");
+            break;
+        }
+
+        switch (option_selected) {
+            case 1:
+                traverse(head);
+                break;
+            case 2:
+                head = insertAtBeginning(head);
+                traverse(head);
+                break;
+            case 3:
+                head = insertAtEnd(head);
+                traverse(head);
+                break;
+            case 4:
+                head = insertAtIndex(head);
+                traverse(head);
+                break;
+            case 5:
+                head = deleteFirst(head);
+                traverse(head);
+                break;
+            case 6:
+                head = deleteLast(head);
+                traverse(head);
+                break;
+            case 7:
+                head = deleteAtIndex(head);
+                traverse(head);
+                break;
+            case 8:
+                isRun = 0;
+                break;
+            default:
+                printf("Invalid choice!\n");
+        }
+    }
+
+    // Free allocated memory before exiting
+    freeList(head);
+    printf("Program terminated.\n");
+    return 0;
 }
