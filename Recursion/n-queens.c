@@ -3,16 +3,6 @@
 
 int possibleCount = 0;
 
-int arrSum(int arr[])
-{
-    int sum = 0;
-    for (int i = 1; i < 9; i++)
-    {
-        sum += arr[i];
-    }
-    return sum;
-}
-
 int checkSafe(int arr[], int row, int col)
 {
     int isSafe = 1;
